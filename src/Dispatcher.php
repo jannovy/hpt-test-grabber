@@ -18,13 +18,22 @@ class Dispatcher
         $this->output = $output;
     }
 
-    /**
-     * @return string JSON
-     */
-    public function run(): string
+    public function run(string $input): void
     {
-        // code here
+    	// Get all product ids from input file as array
+		$productIds = explode("\r\n", trim(file_get_contents($input)));
 
-        return $this->output->getJson();
+		// Find price for every single productId
+		foreach ($productIds as $productId) {
+
+			// Get price (or 0)
+			$price = $this->grabber->getPrice($productId);
+
+			// Add productId and price collection to Output
+			$this->output->add($productId, $price ? ['price' => $price] : null);
+		}
+
+		// Return Output as JSON to STDOUT
+		fwrite(STDOUT, $this->output->getJson());
     }
 }

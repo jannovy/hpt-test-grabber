@@ -1,0 +1,12 @@
+{
+  "autoload": {
+    "classmap": ["vendor/", "src/"],
+    "files": [
+      "vendor/simplehtmldom/simplehtmldom/simple_html_dom.php"
+    ]
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "simplehtmldom/simplehtmldom": "dev-master"
+  }
+}
