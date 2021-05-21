@@ -26,11 +26,21 @@ class Dispatcher
 		// Find price for every single productId
 		foreach ($productIds as $productId) {
 
-			// Get price (or 0)
-			$price = $this->grabber->getPrice($productId);
+			// Is ProductPage loaded ?
+			if($this->grabber->setProductId($productId)) {
 
-			// Add productId and price collection to Output
-			$this->output->add($productId, $price ? ['price' => $price] : null);
+				// Get Price
+				$price = $this->grabber->getPrice($productId);
+
+				// Add collection to Output
+				$this->output->add($productId, [
+					'price' => $price ? $price : null,
+					'name' =>  $this->grabber->getName(),
+					'score' => $this->grabber->getScore(),
+				]);
+			} else {
+				$this->output->add($productId, null);
+			}
 		}
 
 		// Return Output as JSON to STDOUT

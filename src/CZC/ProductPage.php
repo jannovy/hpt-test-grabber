@@ -28,7 +28,13 @@ class ProductPage
 	public static $productIdSelector = 'span[itemprop=mpn]';
 
 	/** @var string */
-	public static $productPriceSelector = 'span[itemprop=price]';
+	public static $productPriceSelector = '.total-price .price-vatin';
+
+	/** @var string */
+	public static $productNameSelector = 'h1';
+
+	/** @var string */
+	public static $productScoreSelector = '.rating__label';
 
 	public function __construct(string $productId)
 	{
@@ -78,13 +84,20 @@ class ProductPage
 
 	public function getPrice(): float
 	{
-		// If product page is loaded
-		if($this->isLoaded()) {
-			// Get the product price
-			return (float) $this->productPage->find(self::$productPriceSelector)[0]->content;
+		return (float) preg_replace("/[^0-9]/", "",  $this->productPage->find(self::$productPriceSelector)[0]->innertext);
+	}
+
+	public function getName(): ?string
+	{
+		return $this->productPage->find(self::$productNameSelector)[0]->innertext;
+	}
+
+	public function getScore(): ?int
+	{
+		if($this->productPage->find(self::$productScoreSelector)[0]) {
+			return (int) $this->productPage->find(self::$productScoreSelector)[0]->innertext;
 		}
 
-		// Or return 0;
-		return 0;
+		return null;
 	}
 }
